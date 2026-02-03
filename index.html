@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>HAYIR</title>
+</head>
+
+<body style="
+  margin:0;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  background-color:white;
+">
+
+  <div style="
+    font-size:26px;
+    margin-bottom:10px;
+    font-family:'Georgia', 'Times New Roman', serif;
+  ">
+    ELİF BİRİSİYLE TANIŞTI MI?
+  </div>
+
+  <div style="
+    font-size:90px;
+    font-weight:bold;
+    margin-bottom:20px;
+    color:#c00000;
+    font-family:'Impact', 'Arial Black', sans-serif;
+    letter-spacing:2px;
+  ">
+    HAYIR
+  </div>
+
+  <div id="counter" style="
+    font-size:32px;
+    margin-bottom:20px;
+    font-family:'Georgia', 'Times New Roman', serif;
+  "></div>
+  
+    GÜN KALDI
+  </div>
+
+  <img src="foto.jpg" style="max-width:300px;">
+
+  <script>
+  const START_NUMBER = 332; // BURAYI DEĞİŞTİR
+
+  localStorage.removeItem("counterData");
+
+  
+    const STORAGE_KEY = "counterData";
+    const now = Date.now();
+
+    let data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+
+    if (!data) {
+      data = { value: START_NUMBER, lastUpdate: now };
+    } else {
+      const daysPassed = Math.floor((now - data.lastUpdate) / (1000 * 60 * 60 * 24));
+      if (daysPassed > 0) {
+        data.value = Math.max(0, data.value - daysPassed);
+        data.lastUpdate += daysPassed * 24 * 60 * 60 * 1000;
+      }
+    }
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    document.getElementById("counter").innerText = data.value;
+  </script>
+
+</body>
+</html>
