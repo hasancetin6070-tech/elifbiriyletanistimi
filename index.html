@@ -16,42 +16,44 @@
   background-color:white;
 ">
 
+  <!-- ÜST YAZI -->
   <div style="
     font-size:26px;
     margin-bottom:10px;
-    font-family:'Georgia', 'Times New Roman', serif;
+    font-family:'Georgia','Times New Roman',serif;
   ">
     ELİF BİRİSİYLE TANIŞTI MI?
   </div>
 
-  <div style="
+  <!-- HAYIR -->
+  <div id="hayir" style="
     font-size:90px;
     font-weight:bold;
     margin-bottom:20px;
     color:#c00000;
-    font-family:'Impact', 'Arial Black', sans-serif;
+    font-family:'Impact','Arial Black',sans-serif;
     letter-spacing:2px;
+    display:none;
   ">
     HAYIR
   </div>
 
+  <!-- SAYAÇ -->
   <div id="counter" style="
     font-size:32px;
     margin-bottom:20px;
-    font-family:'Georgia', 'Times New Roman', serif;
+    font-family:'Georgia','Times New Roman',serif;
   "></div>
-  
-    GÜN KALDI
-  </div>
 
-  <img src="foto.jpg" style="max-width:300px;">
+  <!-- FOTO -->
+  <img id="foto" src="foto.jpg" style="
+    max-width:300px;
+    display:none;
+  ">
 
   <script>
-  const START_NUMBER = 332; // BURAYI DEĞİŞTİR
-
-  localStorage.removeItem("counterData");
-
-  
+    /***** SAYAÇ *****/
+    const START_NUMBER = 100; // BURAYI DEĞİŞTİR
     const STORAGE_KEY = "counterData";
     const now = Date.now();
 
@@ -69,7 +71,36 @@
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     document.getElementById("counter").innerText = data.value;
+
+    /***** GECİKMELER + TİTREME *****/
+    const hayir = document.getElementById("hayir");
+    const foto = document.getElementById("foto");
+
+    // 2 saniye sonra HAYIR
+    setTimeout(() => {
+      hayir.style.display = "block";
+      hayir.style.animation = "shake 0.3s infinite";
+    }, 2000);
+
+    // HAYIR'dan 1 saniye sonra foto
+    setTimeout(() => {
+      foto.style.display = "block";
+    }, 3000);
+
+    /***** TİTREME ANİMASYONU *****/
+    const style = document.createElement("style");
+    style.innerHTML = `
+      @keyframes shake {
+        0% { transform: translate(0); }
+        25% { transform: translate(-2px, 2px); }
+        50% { transform: translate(2px, -2px); }
+        75% { transform: translate(-2px, -2px); }
+        100% { transform: translate(0); }
+      }
+    `;
+    document.head.appendChild(style);
   </script>
 
 </body>
 </html>
+
