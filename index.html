@@ -14,14 +14,11 @@
   align-items:center;
   text-align:center;
   background-color:white;
+  overflow:hidden;
 ">
 
   <!-- ÜST YAZI -->
-  <div style="
-    font-size:26px;
-    margin-bottom:10px;
-    font-family:'Georgia','Times New Roman',serif;
-  ">
+  <div style="font-size:26px; margin-bottom:10px; font-family:Georgia,serif;">
     ELİF BİRİSİYLE TANIŞTI MI?
   </div>
 
@@ -31,7 +28,7 @@
     font-weight:bold;
     margin-bottom:20px;
     color:#c00000;
-    font-family:'Impact','Arial Black',sans-serif;
+    font-family:Impact,Arial Black,sans-serif;
     letter-spacing:2px;
     display:none;
   ">
@@ -39,33 +36,31 @@
   </div>
 
   <!-- SAYAÇ -->
-  <div id="counter" style="
-    font-size:32px;
-    margin-bottom:6px;
-    font-family:'Georgia','Times New Roman',serif;
-  "></div>
-
-  <div style="
-    font-size:18px;
-    margin-bottom:20px;
-    font-family:'Georgia','Times New Roman',serif;
-  ">
+  <div id="counter" style="font-size:32px; margin-bottom:6px; font-family:Georgia,serif;"></div>
+  <div style="font-size:18px; margin-bottom:20px; font-family:Georgia,serif;">
     gün kaldı
   </div>
 
-  <!-- FOTO -->
-  <img id="foto" src="foto.jpg" style="
-    max-width:300px;
-    display:none;
-  ">
+  <!-- ORTA FOTO -->
+  <img id="foto" src="foto.jpg" style="max-width:300px; display:none;">
+
+  <!-- 4 KÖŞE FOTOĞRAFLAR -->
+  <img class="special corner tl" src="foto2.jpg">
+  <img class="special corner tr" src="foto3.jpg">
+  <img class="special corner bl" src="foto4.jpg">
+  <img class="special corner br" src="foto5.jpg">
+
+  <!-- ÜST ORTA BANNER -->
+  <div id="specialText" class="special-text">
+    CUMANIZ MÜBAREK OLSUN
+  </div>
 
   <script>
-    /******** GERİ SAYIM AYARI ********/
-    const START_DAYS = 331; // 🔴 KAÇ GÜNDEN GERİ SAYACAKSA BURAYI DEĞİŞTİR
+    /******** GERİ SAYIM ********/
+    const START_DAYS = 100; // 🔴 BURAYI DEĞİŞTİR
     const STORAGE_KEY = "countdownEndTime";
 
     let endTime = localStorage.getItem(STORAGE_KEY);
-
     if (!endTime) {
       endTime = Date.now() + START_DAYS * 24 * 60 * 60 * 1000;
       localStorage.setItem(STORAGE_KEY, endTime);
@@ -80,47 +75,94 @@
       let diff = endTime - now;
       if (diff < 0) diff = 0;
 
-      const totalSeconds = Math.floor(diff / 1000);
-
-      const days = Math.floor(totalSeconds / (24 * 3600));
-      const hours = Math.floor((totalSeconds % (24 * 3600)) / 3600);
-      const minutes = Math.floor((totalSeconds % 3600) / 60);
-      const seconds = totalSeconds % 60;
+      const s = Math.floor(diff / 1000);
+      const d = Math.floor(s / 86400);
+      const h = Math.floor((s % 86400) / 3600);
+      const m = Math.floor((s % 3600) / 60);
+      const sec = s % 60;
 
       counterEl.innerText =
-        `${days} : ` +
-        `${hours.toString().padStart(2,"0")} : ` +
-        `${minutes.toString().padStart(2,"0")} : ` +
-        `${seconds.toString().padStart(2,"0")}`;
+        `${d} : ${h.toString().padStart(2,"0")} : ${m.toString().padStart(2,"0")} : ${sec.toString().padStart(2,"0")}`;
     }
 
     updateCountdown();
     setInterval(updateCountdown, 1000);
 
     /******** GECİKMELER ********/
-    const hayir = document.getElementById("hayir");
-    const foto = document.getElementById("foto");
-
-    // 2 saniye sonra HAYIR
     setTimeout(() => {
       hayir.style.display = "block";
       hayir.style.animation = "shake 0.3s infinite";
     }, 2000);
 
-    // HAYIR'dan 1 saniye sonra foto
     setTimeout(() => {
       foto.style.display = "block";
     }, 3000);
 
-    /******** TİTREME ********/
+    /******** ÖZEL GÜN ********/
+    const startSpecial = new Date(2026, 1, 6, 0, 0, 0);
+    const endSpecial   = new Date(2026, 1, 6, 23, 59, 59);
+
+    function checkSpecialDay() {
+      const now = new Date();
+      const active = now >= startSpecial && now <= endSpecial;
+
+      document.querySelectorAll(".special").forEach(el => {
+        el.style.display = active ? "block" : "none";
+        el.style.animation = active ? "blink 1.5s infinite" : "none";
+      });
+
+      document.getElementById("specialText").style.display =
+        active ? "block" : "none";
+    }
+
+    checkSpecialDay();
+
+    /******** STİLLER ********/
     const style = document.createElement("style");
     style.innerHTML = `
       @keyframes shake {
         0% { transform: translate(0); }
-        25% { transform: translate(-2px, 2px); }
-        50% { transform: translate(2px, -2px); }
-        75% { transform: translate(-2px, -2px); }
+        25% { transform: translate(-2px,2px); }
+        50% { transform: translate(2px,-2px); }
+        75% { transform: translate(-2px,-2px); }
         100% { transform: translate(0); }
+      }
+
+      @keyframes blink {
+        0%,100% { opacity:1; }
+        50% { opacity:0.3; }
+      }
+
+      .corner {
+        position:fixed;
+        width:160px;
+        z-index:999;
+        display:none;
+      }
+
+      .tl { top:10px; left:10px; }
+      .tr { top:10px; right:10px; }
+      .bl { bottom:10px; left:10px; }
+      .br { bottom:10px; right:10px; }
+
+      .special-text {
+        position:fixed;
+        top:20px;
+        left:50%;
+        transform:translateX(-50%);
+        font-size:32px;
+        font-weight:bold;
+        font-family:Impact,Arial Black,sans-serif;
+        letter-spacing:1px;
+        background: linear-gradient(
+          90deg,
+          red, orange, yellow, green, cyan, blue, violet
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: blink 1.5s infinite;
+        display:none;
+        z-index:998;
       }
     `;
     document.head.appendChild(style);
@@ -128,6 +170,8 @@
 
 </body>
 </html>
+
+
 
 
 
