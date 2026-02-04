@@ -57,8 +57,46 @@
 
     localStorage.removeItem("counterData");
 
-    const STORAGE_KEY = "counterData";
+    <script>
+  /******** AYAR ********/
+  const START_DAYS = 100; // 🔴 KAÇ GÜNDEN GERİ SAYACAKSA BURAYI DEĞİŞTİR
+
+  const STORAGE_KEY = "countdownEndTime";
+
+  let endTime = localStorage.getItem(STORAGE_KEY);
+
+  if (!endTime) {
+    endTime = Date.now() + START_DAYS * 24 * 60 * 60 * 1000;
+    localStorage.setItem(STORAGE_KEY, endTime);
+  } else {
+    endTime = parseInt(endTime);
+  }
+
+  const counterEl = document.getElementById("counter");
+
+  function updateCountdown() {
     const now = Date.now();
+    let diff = endTime - now;
+
+    if (diff < 0) diff = 0;
+
+    const totalSeconds = Math.floor(diff / 1000);
+
+    const days = Math.floor(totalSeconds / (24 * 3600));
+    const hours = Math.floor((totalSeconds % (24 * 3600)) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    counterEl.innerText =
+      `${days} : ` +
+      `${hours.toString().padStart(2, "0")} : ` +
+      `${minutes.toString().padStart(2, "0")} : ` +
+      `${seconds.toString().padStart(2, "0")}`;
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+</script>
 
     let data = JSON.parse(localStorage.getItem(STORAGE_KEY));
 
@@ -106,6 +144,7 @@
 
 </body>
 </html>
+
 
 
 
