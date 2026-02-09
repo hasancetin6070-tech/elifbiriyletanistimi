@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>Canan İçin Geri Sayım</title>
+  <title>HAYIR</title>
 </head>
 
 <body style="
@@ -14,16 +14,12 @@
   align-items:center;
   text-align:center;
   background-color:white;
-  font-family:Georgia,serif;
+  overflow:hidden;
 ">
 
-  <!-- BAŞLIK -->
-  <div style="
-    font-size:42px;
-    font-weight:bold;
-    margin-bottom:25px;
-  ">
-    CANAN İÇİN GERİ SAYIM
+  <!-- ÜST YAZI -->
+  <div style="font-size:26px; margin-bottom:10px; font-family:Georgia,serif;">
+    ELİF BİRİSİYLE TANIŞTI MI?
   </div>
 
   <!-- HAYIR -->
@@ -39,118 +35,139 @@
     HAYIR
   </div>
 
-  <!-- GERİ SAYIM -->
-  <div id="countdown" style="
-    font-size:32px;
-    margin-bottom:30px;
-  ">
-    Yükleniyor...
+  <!-- SAYAÇ -->
+  <div id="counter" style="font-size:32px; margin-bottom:6px; font-family:Georgia,serif;"></div>
+  <div style="font-size:18px; margin-bottom:20px; font-family:Georgia,serif;">
+    gün kaldı
   </div>
 
-  <!-- PLAY / PAUSE BUTONU -->
-  <div id="playButton" style="
-    display:flex;
-    align-items:center;
-    gap:10px;
-    cursor:pointer;
-    margin-bottom:35px;
-    user-select:none;
-  ">
-    <div id="iconPlay"></div>
-    <span id="playText" style="font-size:18px;">play</span>
+  <!-- ORTA FOTO -->
+  <img id="foto" src="foto.jpg" style="max-width:300px; display:none;">
+
+  <!-- 4 KÖŞE FOTOĞRAFLAR -->
+  <img class="special corner tl" src="foto2.jpg">
+  <img class="special corner tr" src="foto3.jpg">
+  <img class="special corner bl" src="foto4.jpg">
+  <img class="special corner br" src="foto5.jpg">
+
+  <!-- ÜST ORTA BANNER -->
+  <div id="specialText" class="special-text">
+    CUMANIZ MÜBAREK OLSUN
   </div>
-
-  <!-- GIF (DOSYA) -->
-  <img id="gif" src="gif.gif" style="
-    max-width:320px;
-    display:none;
-  ">
-
-  <!-- SES -->
-  <audio id="music" src="music.mp3"></audio>
 
   <script>
-    /******** GERİ SAYIM (TSI) ********/
-    const startTime = new Date(2026, 1, 9, 15, 0, 0);   // 09 Şubat 2026 15:00
-    const endTime   = new Date(2026, 7, 31, 15, 0, 0); // 31 Ağustos 2026 15:00
+    /******** GERİ SAYIM ********/
+    const START_DAYS = 100; // 🔴 BURAYI DEĞİŞTİR
+    const STORAGE_KEY = "countdownEndTime";
 
-    const countdownEl = document.getElementById("countdown");
+    let endTime = localStorage.getItem(STORAGE_KEY);
+    if (!endTime) {
+      endTime = Date.now() + START_DAYS * 24 * 60 * 60 * 1000;
+      localStorage.setItem(STORAGE_KEY, endTime);
+    } else {
+      endTime = parseInt(endTime);
+    }
+
+    const counterEl = document.getElementById("counter");
 
     function updateCountdown() {
-      const now = new Date();
-      let diff = now < startTime ? startTime - now : endTime - now;
+      const now = Date.now();
+      let diff = endTime - now;
       if (diff < 0) diff = 0;
 
-      const totalSeconds = Math.floor(diff / 1000);
-      const days = Math.floor(totalSeconds / 86400);
-      const hours = Math.floor((totalSeconds % 86400) / 3600);
-      const minutes = Math.floor((totalSeconds % 3600) / 60);
-      const seconds = totalSeconds % 60;
+      const s = Math.floor(diff / 1000);
+      const d = Math.floor(s / 86400);
+      const h = Math.floor((s % 86400) / 3600);
+      const m = Math.floor((s % 3600) / 60);
+      const sec = s % 60;
 
-      countdownEl.innerText =
-        `${days} : ${hours.toString().padStart(2,"0")} : ` +
-        `${minutes.toString().padStart(2,"0")} : ${seconds.toString().padStart(2,"0")}`;
+      counterEl.innerText =
+        `${d} : ${h.toString().padStart(2,"0")} : ${m.toString().padStart(2,"0")} : ${sec.toString().padStart(2,"0")}`;
     }
 
     updateCountdown();
     setInterval(updateCountdown, 1000);
 
-    /******** GIF GECİKMESİ ********/
+    /******** GECİKMELER ********/
     setTimeout(() => {
-      document.getElementById("gif").style.display = "block";
+      hayir.style.display = "block";
+      hayir.style.animation = "shake 0.3s infinite";
     }, 2000);
 
-    /******** PLAY / PAUSE ********/
-    const music = document.getElementById("music");
-    const playButton = document.getElementById("playButton");
-    const icon = document.getElementById("iconPlay");
-    const text = document.getElementById("playText");
-    let isPlaying = false;
+    setTimeout(() => {
+      foto.style.display = "block";
+    }, 3000);
 
-    music.volume = 0.5;
+    /******** ÖZEL GÜN ********/
+    const startSpecial = new Date(2026, 1, 6, 0, 0, 0);
+    const endSpecial   = new Date(2026, 1, 6, 23, 59, 59);
 
-    function renderIcon() {
-      if (isPlaying) {
-        // PAUSE
-        icon.innerHTML = `
-          <div style="display:flex; gap:6px;">
-            <div style="width:6px;height:20px;background:black;"></div>
-            <div style="width:6px;height:20px;background:black;"></div>
-          </div>
-        `;
-        text.innerText = "pause";
-      } else {
-        // PLAY
-        icon.innerHTML = `
-          <div style="
-            width:0;
-            height:0;
-            border-left:18px solid black;
-            border-top:10px solid transparent;
-            border-bottom:10px solid transparent;
-          "></div>
-        `;
-        text.innerText = "play";
-      }
+    function checkSpecialDay() {
+      const now = new Date();
+      const active = now >= startSpecial && now <= endSpecial;
+
+      document.querySelectorAll(".special").forEach(el => {
+        el.style.display = active ? "block" : "none";
+        el.style.animation = active ? "blink 1.5s infinite" : "none";
+      });
+
+      document.getElementById("specialText").style.display =
+        active ? "block" : "none";
     }
 
-    renderIcon();
+    checkSpecialDay();
 
-    playButton.addEventListener("click", () => {
-      if (!isPlaying) {
-        music.play();
-        isPlaying = true;
-      } else {
-        music.pause();
-        isPlaying = false;
+    /******** STİLLER ********/
+    const style = document.createElement("style");
+    style.innerHTML = `
+      @keyframes shake {
+        0% { transform: translate(0); }
+        25% { transform: translate(-2px,2px); }
+        50% { transform: translate(2px,-2px); }
+        75% { transform: translate(-2px,-2px); }
+        100% { transform: translate(0); }
       }
-      renderIcon();
-    });
 
-    window.addEventListener("beforeunload", () => {
-      music.pause();
-    });
+      @keyframes blink {
+        0%,100% { opacity:1; }
+        50% { opacity:0.3; }
+      }
+
+      .corner {
+        position:fixed;
+        width:160px;
+        z-index:999;
+        display:none;
+      }
+
+      .tl { top:10px; left:10px; }
+      .tr { top:10px; right:10px; }
+      .bl { bottom:10px; left:10px; }
+      .br { bottom:10px; right:10px; }
+
+      .special-text {
+        position:fixed;
+        top:20px;
+        left:50%;
+        transform:translateX(-50%);
+        font-size:32px;
+        font-weight:bold;
+        font-family:Impact,Arial Black,sans-serif;
+        letter-spacing:1px;
+        background: linear-gradient(
+          90deg,
+          red, orange, yellow, green, cyan, blue, violet
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: blink 1.5s infinite;
+        display:none;
+        z-index:998;
+      }
+    `;
+    document.head.appendChild(style);
   </script>
 
 </body>
 </html>
+
